@@ -1,1 +1,24 @@
 
+import nbformat
+from google.colab import files
+
+# Nombre del archivo subido
+nombre_archivo = "nombre_original.ipynb"  # cámbialo por el tuyo
+
+with open(nombre_archivo, "r", encoding="utf-8") as f:
+    nb = nbformat.read(f, as_version=nbformat.NO_CONVERT)
+
+# Limpiar widgets sin 'state'
+for cell in nb.cells:
+    if 'metadata' in cell:
+        widgets = cell.metadata.get('widgets')
+        if isinstance(widgets, dict) and 'state' not in widgets:
+            del cell.metadata['widgets']
+
+# Guardar el limpio
+nombre_limpio = "notebook_limpio.ipynb"
+with open(nombre_limpio, "w", encoding="utf-8") as f:
+    nbformat.write(nb, f)
+
+# Descargarlo
+files.download(nombre_limpio)
